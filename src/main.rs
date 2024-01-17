@@ -25,6 +25,7 @@ async fn run() {
                 if state.input(&event) {
                     return;
                 }
+
                 match event {
                     WindowEvent::CloseRequested
                     | WindowEvent::KeyboardInput {
@@ -37,6 +38,7 @@ async fn run() {
                         ..
                     } => target.exit(),
                     WindowEvent::Resized(new_inner_size) => state.resize(new_inner_size),
+                    WindowEvent::RedrawRequested => state.render().unwrap(),
                     _ => (),
                 }
             }
