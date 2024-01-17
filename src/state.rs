@@ -52,7 +52,6 @@ impl State {
 
         let config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
-            // ? May cause error
             format: *surface_format,
             width: size.width,
             height: size.height,
