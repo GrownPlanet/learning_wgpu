@@ -38,7 +38,10 @@ async fn run() {
                         ..
                     } => target.exit(),
                     WindowEvent::Resized(new_inner_size) => state.resize(new_inner_size),
-                    WindowEvent::RedrawRequested => state.render().unwrap(),
+                    WindowEvent::RedrawRequested => {
+                        state.update();
+                        state.render().unwrap();
+                    }
                     _ => (),
                 }
             }

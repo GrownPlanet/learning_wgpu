@@ -89,7 +89,7 @@ impl State {
         false
     }
 
-    fn _update(&mut self) {}
+    pub fn update(&mut self) {}
 
     pub fn render(&mut self) -> Result<(), wgpu::SurfaceError> {
         let output = self.surface.get_current_texture()?;
