@@ -44,6 +44,7 @@ async fn run() {
                     }
                     _ => (),
                 }
+                state.render().unwrap();
             }
         })
         .unwrap();
