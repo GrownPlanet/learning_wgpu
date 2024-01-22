@@ -7,6 +7,7 @@ use winit::{
 };
 
 mod state;
+mod vertex;
 
 async fn run() {
     env_logger::init();

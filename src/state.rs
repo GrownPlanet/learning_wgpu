@@ -1,4 +1,7 @@
+use wgpu::util::DeviceExt;
 use winit::{event::WindowEvent, window::Window};
+
+use crate::vertex::Vertex;
 
 pub struct State {
     surface: wgpu::Surface,
@@ -8,6 +11,8 @@ pub struct State {
     size: winit::dpi::PhysicalSize<u32>,
     window: Window,
     render_pipeline: wgpu::RenderPipeline,
+    vertex_buffer: wgpu::Buffer,
+    num_vertices: u32,
 }
 
 impl State {
@@ -81,7 +86,7 @@ impl State {
             vertex: wgpu::VertexState {
                 module: &shader,
                 entry_point: "vs_main",
-                buffers: &[],
+                buffers: &[Vertex::desc()],
             },
             fragment: Some(wgpu::FragmentState {
                 module: &shader,
@@ -110,6 +115,21 @@ impl State {
             multiview: None,
         });
 
+        #[rustfmt::skip]
+        let vertex_data: &[Vertex] = &[
+            Vertex { position: [0.0, 0.5, 0.0],   color: [1.0, 0.0, 0.0] },
+            Vertex { position: [-0.5, -0.5, 0.0], color: [0.0, 1.0, 0.0] },
+            Vertex { position: [0.5, -0.5, 0.0],  color: [0.0, 0.0, 1.0] },
+        ];
+
+        let num_vertices = vertex_data.len() as u32;
+
+        let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("Vertex Buffer"),
+            contents: bytemuck::cast_slice(vertex_data),
+            usage: wgpu::BufferUsages::VERTEX,
+        });
+
         Self {
             window,
             surface,
@@ -118,6 +138,8 @@ impl State {
             config,
             size,
             render_pipeline,
+            vertex_buffer,
+            num_vertices,
         }
     }
 
@@ -174,7 +196,9 @@ impl State {
                 timestamp_writes: None,
             });
             render_pass.set_pipeline(&self.render_pipeline);
-            render_pass.draw(0..3, 0..1);
+
+            render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
+            render_pass.draw(0..self.num_vertices, 0..1);
         }
 
         self.queue.submit(std::iter::once(encoder.finish()));
