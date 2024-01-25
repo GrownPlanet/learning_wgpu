@@ -7,12 +7,14 @@ use winit::{
 };
 
 mod state;
+mod texture;
 mod vertex;
 
 async fn run() {
     env_logger::init();
     let event_loop = EventLoop::new().unwrap();
     let window = WindowBuilder::new().build(&event_loop).unwrap();
+    window.set_title("exploring wgpu");
 
     let mut state = State::new(window).await;
 
