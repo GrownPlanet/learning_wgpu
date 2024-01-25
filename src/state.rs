@@ -1,7 +1,7 @@
 use wgpu::util::DeviceExt;
 use winit::{event::WindowEvent, window::Window};
 
-use crate::{texture, vertex::Vertex};
+use crate::{camera::Camera, texture, vertex::Vertex};
 
 pub struct State {
     surface: wgpu::Surface,
@@ -16,6 +16,7 @@ pub struct State {
     num_indices: u32,
     diffuse_bind_group: wgpu::BindGroup,
     diffuse_texture: texture::Texture,
+    camera: Camera,
 }
 
 impl State {
@@ -190,6 +191,16 @@ impl State {
             usage: wgpu::BufferUsages::INDEX,
         });
 
+        let camera = Camera {
+            eye: (0., 1., 2.).into(),
+            target: (0., 0., 0.).into(),
+            up: cgmath::Vector3::unit_y(),
+            aspect: config.width as f32 / config.height as f32,
+            fovy: 45.,
+            znear: 0.1,
+            zfar: 100.,
+        };
+
         Self {
             window,
             surface,
@@ -203,6 +214,7 @@ impl State {
             num_indices,
             diffuse_bind_group,
             diffuse_texture,
+            camera,
         }
     }
 

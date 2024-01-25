@@ -9,6 +9,7 @@ use winit::{
 mod state;
 mod texture;
 mod vertex;
+mod camera;
 
 async fn run() {
     env_logger::init();
