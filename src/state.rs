@@ -123,7 +123,7 @@ impl State {
 
         let camera = Camera {
             eye: (0., 1., 2.).into(),
-            target: (0., 0., 0.).into(),
+            target: (0.001, 0.001, 0.001).into(),
             up: cgmath::Vector3::unit_y(),
             aspect: config.width as f32 / config.height as f32,
             fovy: 45.,
