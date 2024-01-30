@@ -218,10 +218,10 @@ impl State {
             // Vertex { position: [-0.21918549, -0.44939706, 0.0], tex_coords: [0.28081453, 0.949397], },     // C
             // Vertex { position: [0.35966998, -0.3473291, 0.0],   tex_coords: [0.85967, 0.84732914], },      // D
             // Vertex { position: [0.44147372, 0.2347359, 0.0],    tex_coords: [0.9414737, 0.2652641], },     // E        
-            Vertex { position: [0.2, 0.2, 0.0],   tex_coords: [1.0, 0.0], }, // A
-            Vertex { position: [-0.2, 0.2, 0.0],  tex_coords: [0.0, 0.0], }, // B
-            Vertex { position: [-0.2, -0.2, 0.0], tex_coords: [0.0, 1.0], }, // C
-            Vertex { position: [0.2, -0.2, 0.0], tex_coords: [1.0, 1.0], }, // D
+            Vertex { position: [0.2, 0.2, 1.0],   tex_coords: [1.0, 0.0], }, // A
+            Vertex { position: [-0.2, 0.2, 1.0],  tex_coords: [0.0, 0.0], }, // B
+            Vertex { position: [-0.2, -0.2, 1.0], tex_coords: [0.0, 1.0], }, // C
+            Vertex { position: [0.2, -0.2, 1.0], tex_coords: [1.0, 1.0], }, // D
         ];
 
         #[rustfmt::skip]
