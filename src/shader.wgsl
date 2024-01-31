@@ -22,10 +22,11 @@ fn vs_main(
     var out: VertexOutput;
     out.tex_coords = model.tex_coords;
     out.clip_position = camera.view_proj * vec4<f32>(model.position, 1.0);
+    
     // it works, for some reason if I add this
-    out.clip_position.z = 1.0; // needs to be between 0 and 1 ?? could be depth buffer
-    out.clip_position.w = 1.0; // something to do with scale, needs to be bigger than one
-    // out.clip_position = vec4<f32>(model.position, 1.0);
+    // out.clip_position.z = 1.0; // needs to be between 0 and 1 ?? could be depth buffer
+    out.clip_position.w = 1.0; // homogenous coordinates, idk what the f that means 
+    
     return out;
 }
 
