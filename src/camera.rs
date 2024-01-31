@@ -4,8 +4,8 @@ use glam::{f32::Mat4, Vec3, Vec4};
 const OPENGL_TO_WGPU_MATRIX: Mat4 = Mat4::from_cols_array(&[
     1.0, 0.0, 0.0, 0.0,
     0.0, 1.0, 0.0, 0.0,
-    0.0, 0.0, -0.5, -0.5,
-    0.0, 0.0, 0.0, -1.0
+    0.0, 0.0, 0.5, 0.5,
+    0.0, 0.0, 0.0, 1.0
 ]);
 
 pub struct Camera {
@@ -20,10 +20,10 @@ pub struct Camera {
 
 impl Camera {
     fn build_view_projection_matrix(&self) -> Mat4 {
-        // let view = cgmath::Matrix4::look_to_rh(self.eye, self.target, self.up);
+        let view = Mat4::look_at_rh(self.eye, self.target, self.up);
         let proj = Mat4::perspective_rh(self.fovy, self.aspect, self.znear, self.zfar);
 
-        OPENGL_TO_WGPU_MATRIX * proj
+        OPENGL_TO_WGPU_MATRIX * proj * view
     }
 }
 
