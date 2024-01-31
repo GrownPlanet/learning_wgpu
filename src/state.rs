@@ -127,7 +127,7 @@ impl State {
             up: glam::Vec3::Y,
             aspect: 4. / 3.,
             fovy: 45.,
-            znear: 0.1,
+            znear: 1.0,
             zfar: 100.,
         };
 

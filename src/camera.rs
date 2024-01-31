@@ -1,4 +1,4 @@
-use glam::{f32::Mat4, Vec3};
+use glam::{f32::Mat4, Vec3, Vec4};
 
 #[rustfmt::skip]
 const OPENGL_TO_WGPU_MATRIX: Mat4 = Mat4::from_cols_array(&[
@@ -23,8 +23,6 @@ impl Camera {
         // let view = cgmath::Matrix4::look_to_rh(self.eye, self.target, self.up);
         let proj = Mat4::perspective_rh(self.fovy, self.aspect, self.znear, self.zfar);
 
-        println!("{:?}", proj);
-        println!("{:?}", proj * OPENGL_TO_WGPU_MATRIX);
         OPENGL_TO_WGPU_MATRIX * proj
     }
 }
@@ -45,4 +43,14 @@ impl CameraUniform {
     pub fn update_view_proj(&mut self, camera: &Camera) {
         self.view_proj = *camera.build_view_projection_matrix().as_mut();
     }
+}
+
+fn _print_4x4(mat: Mat4) {
+    fn print_v4(v: Vec4) {
+        println!("[{}, {}, {}, {}]", v.x, v.y, v.z, v.w);
+    }
+    print_v4(mat.x_axis);
+    print_v4(mat.y_axis);
+    print_v4(mat.z_axis);
+    print_v4(mat.w_axis);
 }
