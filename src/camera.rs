@@ -1,4 +1,8 @@
 use glam::{f32::Mat4, Vec3, Vec4};
+use winit::{
+    event::{ElementState, KeyEvent, WindowEvent},
+    keyboard::{KeyCode, PhysicalKey},
+};
 
 #[rustfmt::skip]
 const OPENGL_TO_WGPU_MATRIX: Mat4 = Mat4::from_cols_array(&[
@@ -53,4 +57,82 @@ fn _print_4x4(mat: Mat4) {
     print_v4(mat.y_axis);
     print_v4(mat.z_axis);
     print_v4(mat.w_axis);
+}
+
+struct CameraControler {
+    speed: f32,
+    forward_pressed: bool,
+    backward_pressed: bool,
+    right_pressed: bool,
+    left_pressed: bool,
+}
+
+impl CameraControler {
+    pub fn new(speed: f32) -> Self {
+        Self {
+            speed,
+            forward_pressed: false,
+            backward_pressed: false,
+            right_pressed: false,
+            left_pressed: false,
+        }
+    }
+
+    pub fn process_keypress(&mut self, event: &WindowEvent) -> bool {
+        match event {
+            WindowEvent::KeyboardInput {
+                event:
+                    KeyEvent {
+                        physical_key: PhysicalKey::Code(KeyCode::KeyW),
+                        state: ElementState::Pressed,
+                        ..
+                    },
+                ..
+            } => {
+                self.forward_pressed = true;
+                return true;
+            }
+            WindowEvent::KeyboardInput {
+                event:
+                    KeyEvent {
+                        physical_key: PhysicalKey::Code(KeyCode::KeyS),
+                        state: ElementState::Pressed,
+                        ..
+                    },
+                ..
+            } => {
+                self.backward_pressed = true;
+                return true;
+            }
+            WindowEvent::KeyboardInput {
+                event:
+                    KeyEvent {
+                        physical_key: PhysicalKey::Code(KeyCode::KeyD),
+                        state: ElementState::Pressed,
+                        ..
+                    },
+                ..
+            } => {
+                self.right_pressed = true;
+                return true;
+            }
+            WindowEvent::KeyboardInput {
+                event:
+                    KeyEvent {
+                        physical_key: PhysicalKey::Code(KeyCode::KeyA),
+                        state: ElementState::Pressed,
+                        ..
+                    },
+                ..
+            } => {
+                self.left_pressed = true;
+                return true;
+            }
+            _ => return false,
+        }
+    }
+
+    pub fn update(&self, camera: &mut Camera) {
+        let forward = camera.target - camera.eye;
+    }
 }
