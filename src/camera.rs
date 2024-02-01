@@ -59,7 +59,7 @@ fn _print_4x4(mat: Mat4) {
     print_v4(mat.w_axis);
 }
 
-struct CameraControler {
+pub struct CameraControler {
     speed: f32,
     forward_pressed: bool,
     backward_pressed: bool,
@@ -90,7 +90,7 @@ impl CameraControler {
                 ..
             } => {
                 self.forward_pressed = true;
-                return true;
+                true
             }
             WindowEvent::KeyboardInput {
                 event:
@@ -102,7 +102,7 @@ impl CameraControler {
                 ..
             } => {
                 self.backward_pressed = true;
-                return true;
+                true
             }
             WindowEvent::KeyboardInput {
                 event:
@@ -114,7 +114,7 @@ impl CameraControler {
                 ..
             } => {
                 self.right_pressed = true;
-                return true;
+                true
             }
             WindowEvent::KeyboardInput {
                 event:
@@ -126,13 +126,35 @@ impl CameraControler {
                 ..
             } => {
                 self.left_pressed = true;
-                return true;
+                true
             }
-            _ => return false,
+            _ => false,
         }
     }
 
     pub fn update(&self, camera: &mut Camera) {
+        println!("{}", self.forward_pressed);
         let forward = camera.target - camera.eye;
+        let forward_norm = forward.normalize();
+        let forward_mag = forward.length();
+
+        if self.forward_pressed && forward_mag > self.speed {
+            camera.eye += forward_norm * self.speed;
+        }
+        if self.backward_pressed {
+            camera.eye -= forward_norm * self.speed;
+        }
+
+        let right = forward_norm.cross(camera.up);
+
+        let forward = camera.target - camera.eye;
+        let forward_mag = forward.length();
+
+        if self.right_pressed {
+            camera.eye = camera.target - (forward + right * self.speed).normalize() * forward_mag;
+        }
+        if self.left_pressed {
+            camera.eye = camera.target + (forward + right * self.speed).normalize() * forward_mag;
+        }
     }
 }

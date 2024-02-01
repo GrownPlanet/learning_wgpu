@@ -6,10 +6,10 @@ use winit::{
     window::WindowBuilder,
 };
 
+mod camera;
 mod state;
 mod texture;
 mod vertex;
-mod camera;
 
 async fn run() {
     env_logger::init();
@@ -48,6 +48,7 @@ async fn run() {
                     }
                     _ => (),
                 }
+                state.update();
                 state.render().unwrap();
             }
         })

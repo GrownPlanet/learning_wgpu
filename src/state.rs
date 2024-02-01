@@ -1,8 +1,12 @@
 use wgpu::util::DeviceExt;
-use winit::{event::WindowEvent, window::Window};
+use winit::{
+    event::{ElementState, KeyEvent, WindowEvent},
+    keyboard::{KeyCode, PhysicalKey},
+    window::Window,
+};
 
 use crate::{
-    camera::{Camera, CameraUniform},
+    camera::{Camera, CameraControler, CameraUniform},
     texture,
     vertex::Vertex,
 };
@@ -24,6 +28,7 @@ pub struct State {
     camera_uniform: CameraUniform,
     camera_buffer: wgpu::Buffer,
     camera_bind_group: wgpu::BindGroup,
+    camera_controller: CameraControler,
 }
 
 impl State {
@@ -164,6 +169,8 @@ impl State {
             label: Some("camera_bind_group"),
         });
 
+        let camera_controller = CameraControler::new(0.2);
+
         let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("Shader"),
             source: wgpu::ShaderSource::Wgsl(include_str!("shader.wgsl").into()),
@@ -264,6 +271,7 @@ impl State {
             camera_uniform,
             camera_buffer,
             camera_bind_group,
+            camera_controller,
         }
     }
 
@@ -280,11 +288,19 @@ impl State {
         }
     }
 
-    pub fn input(&mut self, _event: &WindowEvent) -> bool {
-        false
+    pub fn input(&mut self, event: &WindowEvent) -> bool {
+        self.camera_controller.process_keypress(event)
     }
 
-    pub fn update(&mut self) {}
+    pub fn update(&mut self) {
+        self.camera_controller.update(&mut self.camera);
+        self.camera_uniform.update_view_proj(&self.camera);
+        self.queue.write_buffer(
+            &self.camera_buffer,
+            0,
+            bytemuck::cast_slice(&[self.camera_uniform]),
+        );
+    }
 
     pub fn render(&mut self) -> Result<(), wgpu::SurfaceError> {
         let output = self.surface.get_current_texture()?;
