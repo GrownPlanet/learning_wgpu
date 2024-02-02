@@ -21,13 +21,15 @@ async fn run() {
 
     event_loop
         .run(move |event, target| {
+            state.update();
+            state.render().unwrap();
             if let Event::WindowEvent {
                 window_id: _,
                 event,
             } = event
             {
                 if state.input(&event) {
-                    return;
+                    // return;
                 }
 
                 match event {
@@ -48,8 +50,6 @@ async fn run() {
                     }
                     _ => (),
                 }
-                state.update();
-                state.render().unwrap();
             }
         })
         .unwrap();

@@ -83,57 +83,35 @@ impl CameraControler {
             WindowEvent::KeyboardInput {
                 event:
                     KeyEvent {
-                        physical_key: PhysicalKey::Code(KeyCode::KeyW),
+                        physical_key,
                         state: ElementState::Pressed,
                         ..
                     },
                 ..
-            } => {
-                self.forward_pressed = true;
-                true
-            }
-            WindowEvent::KeyboardInput {
-                event:
-                    KeyEvent {
-                        physical_key: PhysicalKey::Code(KeyCode::KeyS),
-                        state: ElementState::Pressed,
-                        ..
-                    },
-                ..
-            } => {
-                self.backward_pressed = true;
-                true
-            }
-            WindowEvent::KeyboardInput {
-                event:
-                    KeyEvent {
-                        physical_key: PhysicalKey::Code(KeyCode::KeyD),
-                        state: ElementState::Pressed,
-                        ..
-                    },
-                ..
-            } => {
-                self.right_pressed = true;
-                true
-            }
-            WindowEvent::KeyboardInput {
-                event:
-                    KeyEvent {
-                        physical_key: PhysicalKey::Code(KeyCode::KeyA),
-                        state: ElementState::Pressed,
-                        ..
-                    },
-                ..
-            } => {
-                self.left_pressed = true;
-                true
-            }
+            } => match physical_key {
+                PhysicalKey::Code(KeyCode::KeyW) => {
+                    self.forward_pressed = true;
+                    return true;
+                }
+                PhysicalKey::Code(KeyCode::KeyS) => {
+                    self.backward_pressed = true;
+                    return true;
+                }
+                PhysicalKey::Code(KeyCode::KeyD) => {
+                    self.right_pressed = true;
+                    return true;
+                }
+                PhysicalKey::Code(KeyCode::KeyA) => {
+                    self.left_pressed = true;
+                    return true;
+                }
+                _ => false,
+            },
             _ => false,
         }
     }
 
     pub fn update(&self, camera: &mut Camera) {
-        println!("{}", self.forward_pressed);
         let forward = camera.target - camera.eye;
         let forward_norm = forward.normalize();
         let forward_mag = forward.length();
